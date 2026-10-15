@@ -1,4 +1,4 @@
-data/
+/data/
 runs*/
 mlruns/
 models/*.pt
@@ -17,4 +17,4 @@ logs_*.txt
 report/*.synctex.gz
 Ultralytics/
 *.pt
-weights/
+/weights/
