@@ -21,10 +21,11 @@ COPY --chown=user configs ./configs
 COPY --chown=user src ./src
 COPY --chown=user api ./api
 COPY --chown=user app ./app
+# trained weights + calibration are baked in (no download needed at start-up)
 COPY --chown=user models ./models
 
 USER user
-ENV RV_CONFIG=/home/user/app/configs/default.yaml PYTHONPATH=/home/user/app/src:/home/user/app
+ENV RV_CONFIG=/home/user/app/configs/default.yaml RV_OVERRIDE=/home/user/app/configs/fast45.yaml PYTHONPATH=/home/user/app/src:/home/user/app
 EXPOSE 7860
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD curl -fs http://localhost:7860/health || exit 1
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]

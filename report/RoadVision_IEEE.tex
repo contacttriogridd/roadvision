@@ -145,12 +145,12 @@ Following CRDDC'2022~\cite{crddc2022}, a prediction is a true positive iff IoU$>
 
 % =====================================================================
 \section{Implementation and Experiments}
-\textbf{Environment.} Python 3.11, PyTorch 2, Ultralytics 8.3, timm 1.0, Optuna 3.6, MLflow 2.12, scikit-learn, Albumentations; training on a single NVIDIA T4 (16\,GB) (Google Colab/Kaggle). %% EDIT-AFTER-RUN: your GPU and wall-clock times
+\textbf{Environment.} Python 3.12, PyTorch 2.6 (CUDA 12.4), Ultralytics 8.4, timm 1.0, Optuna 5.0, MLflow 3.17, scikit-learn, Albumentations; training on a single NVIDIA GeForce RTX 4060 Laptop GPU (8\,GB). YOLOv8s trains at about 30\,s per epoch on this hardware.
 Seeds are fixed (42) and deterministic cuDNN is enabled.
 
 \textbf{Code organisation.} The repository is a Python package (\texttt{src/roadvision}) with sub-modules \texttt{data}, \texttt{models}, \texttt{tuning}, \texttt{evaluation}, \texttt{explain}, \texttt{visualization} and \texttt{inference}; all settings live in YAML (\texttt{configs/}); \texttt{scripts/run\_pipeline.py} executes the idempotent stages download $\rightarrow$ prepare $\rightarrow$ tune $\rightarrow$ train $\rightarrow$ evaluate $\rightarrow$ benchmark $\rightarrow$ explain $\rightarrow$ plots $\rightarrow$ report. Unit tests cover data conversion, metrics and the API contract.
 
-\textbf{Training settings.} YOLOv8s, 640\,px, 100 epochs (early stopping, patience 20), batch 16, cosine LR, mosaic closed for the final 10 epochs. RT-DETR-L, 60 epochs, batch 8, $lr{=}10^{-4}$. ViT-S/16, 25 epochs, batch 64. Tuned values are loaded automatically from \texttt{runs/optuna/*\_best.json}.
+\textbf{Training settings (reduced-budget run).} This is a fast-track, reduced-budget experiment on the RDD2022 China subset (China\_MotorBike + China\_Drone) with the \texttt{china\_811} protocol (random 8:1:1 split). Because the official CRDDC bucket was unreachable, data came from the public Hugging Face mirror \texttt{dronefreak/RDD2022} (4-class export), which retains 2{,}378 of the China images (1{,}902/237/239 train/val/test, 4{,}296 boxes); results are therefore only approximately comparable with StripRFNet~\cite{striprfnet}, which used the full China subset. YOLOv8s, 512\,px, 15 epochs, batch 32, cosine LR, mosaic closed for the final 3 epochs, default hyper-parameters (the YOLO Optuna search was skipped for time). ViT-S/16 (ImageNet-21k), 4 epochs, batch 64, with a 3-trial Optuna TPE search (1 epoch per trial). RT-DETR and the WBF ensemble were not trained in this run.
 
 \textbf{Exploratory analysis.} Fig.~\ref{fig:eda} shows strong class imbalance and country-dependent class mixes (domain shift), and that most boxes cover less than 1\% of the image and are either very wide (transverse) or very tall (longitudinal). Box centres concentrate in the lower half of the frame (the road surface).
 
@@ -239,7 +239,7 @@ Calibrating on validation only, bootstrap confidence intervals and a fixed CRDDC
 
 \textbf{Deployment considerations.} The ViT adds latency proportional to the number of proposals; batching crops, INT8/ONNX export and capping proposals keep it real-time on edge GPUs. Thresholds should be re-calibrated when the camera type or country changes, and GPS tags are needed to turn detections into maintenance maps.
 
-\textbf{Future work.} (i) Tiled inference and higher resolution for small cracks and the Norway subset; (ii) domain adaptation across countries; (iii) instance segmentation for crack length and pothole area estimation; (iv) temporal tracking across video frames for de-duplication; (v) knowledge distillation of the ViT into the detector head for single-stage speed.
+\textbf{Future work.} (i) Tiled inference and higher resolution for small cracks and the Norway subset; (ii) domain adaptation across countries; (iii) instance segmentation for crack length and pothole area estimation; (iv) temporal tracking across video frames for de-duplication; (v) knowledge distillation of the ViT into the detector head for single-stage speed. Due to the lab time budget, models were trained for a reduced number of epochs on the China subset; full-dataset training is expected to improve results.
 
 % =====================================================================
 \begin{thebibliography}{99}\small

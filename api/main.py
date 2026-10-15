@@ -36,7 +36,8 @@ sys.path.insert(0, str(ROOT))
 from roadvision import __version__  # noqa: E402
 from roadvision.utils.config import load_config  # noqa: E402
 
-CFG = load_config(os.environ.get("RV_CONFIG", ROOT / "configs/default.yaml"))
+CFG = load_config(os.environ.get("RV_CONFIG", ROOT / "configs/default.yaml"),
+                  [o for o in os.environ.get("RV_OVERRIDE", "").split(",") if o])
 os.chdir(ROOT)
 MAX_BYTES = int(CFG.app.max_upload_mb * 1024 * 1024)
 MAGIC = {b"\xff\xd8\xff": "jpeg", b"\x89PNG": "png", b"RIFF": "webp", b"BM": "bmp"}

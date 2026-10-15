@@ -1,6 +1,8 @@
 """Gradio interface (mounted at /ui by api/main.py; also runnable stand-alone)."""
 from __future__ import annotations
 
+from pathlib import Path
+
 import cv2
 import gradio as gr
 import pandas as pd
@@ -40,6 +42,9 @@ def build_ui(predictor) -> gr.Blocks:
                 out = gr.Image(label="Detections")
                 summ = gr.Markdown()
         tab = gr.Dataframe(label="Detections")
+        examples = sorted(str(p) for p in (Path(__file__).parent / "examples").glob("*.jpg"))
+        if examples:  # held-out RDD2022-China test images, one per class
+            gr.Examples(examples, inputs=img, label="Sample road images (test split)")
         btn.click(infer, [img, mode, conf, use_cal], [out, summ, tab])
     return ui
 
