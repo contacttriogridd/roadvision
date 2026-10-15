@@ -1,0 +1,11 @@
+method,source,protocol,f1,mAP50,comparable,ours,f1_ci_low,f1_ci_high,fps
+YOLO ensemble (GRDDC'20 winner),Arya et al. 2020 [GRDDC],RDD2020 test1 (JP/IN/CZ),0.67,,False,False,,,
+YOLOv5/v7 + Cascade R-CNN-Swin ens. (CRDDC'22 #1),Arya et al. 2022 [CRDDC],"RDD2022 hidden test, 6 countries",0.77,,False,False,,,
+YOLOv7 single model (CRDDC'22 #3),Arya et al. 2022 [CRDDC],"RDD2022 hidden test, 6 countries",0.741,,False,False,,,
+Faster R-CNN-R50,Lin et al. 2025 [StripRFNet],RDD2022-China 8:1:1,0.776,0.83,True,False,,,
+YOLOv8s,Lin et al. 2025 [StripRFNet],RDD2022-China 8:1:1,0.807,0.839,True,False,,,
+YOLO11s,Lin et al. 2025 [StripRFNet],RDD2022-China 8:1:1,0.772,0.815,True,False,,,
+RT-DETRv2-R18,Lin et al. 2025 [StripRFNet],RDD2022-China 8:1:1,0.767,0.8,True,False,,,
+StripRFNet,Lin et al. 2025 [StripRFNet],RDD2022-China 8:1:1,0.816,0.844,True,False,,,
+RoadVision YOLO,this work,RDD2022-China 8:1:1,0.6380368098159509,0.6237475170013075,True,True,0.5977298460144927,0.6856036763173546,48.81894762862973
+RoadVision Hybrid YOLO+ViT (ours),this work,RDD2022-China 8:1:1,0.6438529784537389,0.6086910583775239,True,True,0.603028977791299,0.6900163599666371,23.442976134981492

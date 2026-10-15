@@ -1,0 +1,14 @@
+# Render Blueprint — https://render.com/deploy?repo=https://github.com/contacttriogridd/roadvision
+services:
+  - type: web
+    name: roadvision
+    runtime: docker
+    plan: free            # 512 MB RAM; switch to "standard" (2 GB) if the instance runs out of memory
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: "7860"
+      - key: RV_WEIGHTS_URL
+        value: https://github.com/contacttriogridd/roadvision/releases/download/v1.0

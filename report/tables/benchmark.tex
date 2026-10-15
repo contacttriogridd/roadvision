@@ -1,0 +1,13 @@
+\begin{table*}[t]\centering\caption{Comparison with published road-damage detectors. Rows on ``RDD2022-China 8:1:1'' share our protocol (run \texttt{configs/china\_811.yaml}); challenge rows use hidden test sets and are indicative.}\label{tab:bench}
+\begin{tabular}{llcc}\toprule Method & Protocol & F1 & mAP50 \\ \midrule
+YOLO ensemble (GRDDC'20 winner) & RDD2020 test1 (JP/IN/CZ) & 0.670 & -- \\
+YOLOv5/v7 + Cascade R-CNN-Swin ens. (CRDDC'22 \#1) & RDD2022 hidden test, 6 countries & 0.770 & -- \\
+YOLOv7 single model (CRDDC'22 \#3) & RDD2022 hidden test, 6 countries & 0.741 & -- \\
+Faster R-CNN-R50 & RDD2022-China 8:1:1 & 0.776 & 0.830 \\
+YOLOv8s & RDD2022-China 8:1:1 & 0.807 & 0.839 \\
+YOLO11s & RDD2022-China 8:1:1 & 0.772 & 0.815 \\
+RT-DETRv2-R18 & RDD2022-China 8:1:1 & 0.767 & 0.800 \\
+StripRFNet & RDD2022-China 8:1:1 & 0.816 & 0.844 \\
+\textbf{RoadVision YOLO} & RDD2022-China 8:1:1 & 0.638 & 0.624 \\
+\textbf{RoadVision Hybrid YOLO+ViT (ours)} & RDD2022-China 8:1:1 & 0.644 & 0.609 \\
+\bottomrule\end{tabular}\end{table*}

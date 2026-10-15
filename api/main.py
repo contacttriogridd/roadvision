@@ -35,6 +35,7 @@ sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
 
 from roadvision import __version__  # noqa: E402
+from roadvision.inference.weights import ensure_weights  # noqa: E402
 from roadvision.utils.config import load_config  # noqa: E402
 
 CFG = load_config(os.environ.get("RV_CONFIG", ROOT / "configs/default.yaml"),
@@ -74,23 +75,7 @@ class PredictionOut(BaseModel):
     latency_ms: float
 
 
-def maybe_download_weights() -> None:
-    repo = os.environ.get("RV_WEIGHTS_REPO") or CFG.app.hf_weights_repo
-    if not repo:
-        return
-    from huggingface_hub import hf_hub_download
-
-    for key in ("detector", "rtdetr", "vit", "calibration"):
-        dst = Path(CFG.app[key])
-        if not dst.exists():
-            try:
-                p = hf_hub_download(repo, dst.name, local_dir=str(dst.parent))
-                print(f"downloaded {p}")
-            except Exception as exc:  # optional files (e.g. rtdetr) may be absent
-                print(f"weights {dst.name} not in {repo}: {exc}")
-
-
-maybe_download_weights()
+ensure_weights(CFG)
 from roadvision.inference.predictor import from_config  # noqa: E402
 
 PREDICTOR = from_config(CFG)

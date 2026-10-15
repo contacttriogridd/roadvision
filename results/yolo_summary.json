@@ -1,0 +1,45 @@
+{
+  "kind": "yolo",
+  "save_dir": "C:\\Users\\Dakshinesh\\Desktop\\Cit college\\RoadVision\\RoadVision\\runs\\detect\\yolo",
+  "params": {
+    "imgsz": 512,
+    "epochs": 15,
+    "batch": 32,
+    "patience": 50,
+    "optimizer": "auto",
+    "lr0": 0.01,
+    "weight_decay": 0.0005,
+    "momentum": 0.937,
+    "mosaic": 1.0,
+    "mixup": 0.1,
+    "close_mosaic": 3,
+    "cos_lr": true,
+    "workers": 4
+  },
+  "val": {
+    "metrics/precision(B)": 0.6934778483376675,
+    "metrics/recall(B)": 0.5349790169572346,
+    "metrics/mAP50(B)": 0.5891307607479919,
+    "metrics/mAP50-95(B)": 0.3501798055716526,
+    "fitness": 0.3501798055716526
+  },
+  "test": {
+    "mAP50": 0.6242458796151749,
+    "mAP50_95": 0.39026782541866417,
+    "precision": 0.6478705773462335,
+    "recall": 0.5968925223746271,
+    "AP50_per_class": {
+      "D00": 0.6249414083910776,
+      "D10": 0.6690053469567537,
+      "D20": 0.3516817001983115,
+      "D40": 0.8513550629145568
+    },
+    "speed_ms": {
+      "preprocess": 1.0018807530956475,
+      "inference": 5.1928389120689165,
+      "loss": 0.012572385077501129,
+      "postprocess": 1.493107113099723
+    },
+    "fps": 129.86339783014884
+  }
+}

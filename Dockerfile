@@ -27,5 +27,6 @@ COPY --chown=user models ./models
 USER user
 ENV RV_CONFIG=/home/user/app/configs/default.yaml RV_OVERRIDE=/home/user/app/configs/fast45.yaml PYTHONPATH=/home/user/app/src:/home/user/app
 EXPOSE 7860
-HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD curl -fs http://localhost:7860/health || exit 1
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "7860", "--workers", "1"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s CMD curl -fs http://localhost:${PORT:-7860}/health || exit 1
+# Render injects $PORT; Hugging Face Spaces / local runs use 7860
+CMD ["sh", "-c", "uvicorn api.main:app --host 0.0.0.0 --port ${PORT:-7860} --workers 1"]

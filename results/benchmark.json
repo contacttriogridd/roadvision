@@ -1,0 +1,122 @@
+[
+  {
+    "method": "YOLO ensemble (GRDDC'20 winner)",
+    "source": "Arya et al. 2020 [GRDDC]",
+    "protocol": "RDD2020 test1 (JP/IN/CZ)",
+    "f1": 0.67,
+    "mAP50": NaN,
+    "comparable": false,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "YOLOv5/v7 + Cascade R-CNN-Swin ens. (CRDDC'22 #1)",
+    "source": "Arya et al. 2022 [CRDDC]",
+    "protocol": "RDD2022 hidden test, 6 countries",
+    "f1": 0.77,
+    "mAP50": NaN,
+    "comparable": false,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "YOLOv7 single model (CRDDC'22 #3)",
+    "source": "Arya et al. 2022 [CRDDC]",
+    "protocol": "RDD2022 hidden test, 6 countries",
+    "f1": 0.741,
+    "mAP50": NaN,
+    "comparable": false,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "Faster R-CNN-R50",
+    "source": "Lin et al. 2025 [StripRFNet]",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.776,
+    "mAP50": 0.83,
+    "comparable": true,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "YOLOv8s",
+    "source": "Lin et al. 2025 [StripRFNet]",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.807,
+    "mAP50": 0.839,
+    "comparable": true,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "YOLO11s",
+    "source": "Lin et al. 2025 [StripRFNet]",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.772,
+    "mAP50": 0.815,
+    "comparable": true,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "RT-DETRv2-R18",
+    "source": "Lin et al. 2025 [StripRFNet]",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.767,
+    "mAP50": 0.8,
+    "comparable": true,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "StripRFNet",
+    "source": "Lin et al. 2025 [StripRFNet]",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.816,
+    "mAP50": 0.844,
+    "comparable": true,
+    "ours": false,
+    "f1_ci_low": NaN,
+    "f1_ci_high": NaN,
+    "fps": NaN
+  },
+  {
+    "method": "RoadVision YOLO",
+    "source": "this work",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.6380368098159509,
+    "mAP50": 0.6237475170013075,
+    "comparable": true,
+    "ours": true,
+    "f1_ci_low": 0.5977298460144927,
+    "f1_ci_high": 0.6856036763173546,
+    "fps": 48.81894762862973
+  },
+  {
+    "method": "RoadVision Hybrid YOLO+ViT (ours)",
+    "source": "this work",
+    "protocol": "RDD2022-China 8:1:1",
+    "f1": 0.6438529784537389,
+    "mAP50": 0.6086910583775239,
+    "comparable": true,
+    "ours": true,
+    "f1_ci_low": 0.603028977791299,
+    "f1_ci_high": 0.6900163599666371,
+    "fps": 23.442976134981492
+  }
+]
