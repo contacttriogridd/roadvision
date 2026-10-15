@@ -1,0 +1,9 @@
+data/
+runs*/
+mlruns/
+report/
+notebooks/
+tests/
+.git/
+**/__pycache__/
+*.zip

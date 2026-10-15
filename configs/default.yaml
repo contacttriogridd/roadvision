@@ -1,0 +1,113 @@
+# =====================================================================
+# RoadVision — master experiment configuration
+# Every stage of the pipeline reads from this file. Override any key with
+# another YAML (e.g. configs/smoke.yaml) via:  --config configs/default.yaml --override configs/x.yaml
+# =====================================================================
+project:
+  name: RoadVision
+  seed: 42
+  device: "0"              # "0" = first GPU, "cpu" for CPU-only
+  workdir: runs            # all outputs (weights, plots, metrics) go here
+
+data:
+  raw_dir: data/raw/RDD2022          # unzipped RDD2022.zip (one sub-folder per country)
+  processed_dir: data/processed      # YOLO-format dataset is written here
+  crops_dir: data/crops              # ViT crop-classification dataset
+  # Norway images are 3650x2044 and 9.9 GB; excluded by default to fit a Colab/Kaggle GPU.
+  countries: [Japan, India, Czech, United_States, China_MotorBike, China_Drone]
+  classes: [D00, D10, D20, D40]      # longitudinal, transverse, alligator crack, pothole
+  class_names: [Longitudinal Crack, Transverse Crack, Alligator Crack, Pothole]
+  drop_labels: [D43, D44, D50, Repair, D01, D11, D0w0, Block crack]   # rare / out-of-scope labels
+  keep_negatives: 0.15               # fraction of annotation-free images kept as hard negatives
+  split: {train: 0.8, val: 0.1, test: 0.1}   # stratified by country + dominant class
+  protocol: all                      # "all" | "china_811" (reproduces StripRFNet protocol)
+  min_box_px: 4                      # boxes thinner than this are treated as annotation noise
+
+augmentation:                        # offline albumentations preview + ViT crop training
+  hflip: 0.5
+  brightness_contrast: 0.4
+  hue_sat: 0.3
+  motion_blur: 0.2
+  rain_fog_shadow: 0.2
+  clahe: 0.2
+
+yolo:
+  weights: yolov8s.pt                # also try yolo11s.pt
+  imgsz: 640
+  epochs: 100
+  batch: 16
+  patience: 20
+  optimizer: auto
+  lr0: 0.01
+  weight_decay: 0.0005
+  momentum: 0.937
+  mosaic: 1.0
+  mixup: 0.1
+  close_mosaic: 10
+  cos_lr: true
+  workers: 4
+
+rtdetr:
+  weights: rtdetr-l.pt
+  imgsz: 640
+  epochs: 60
+  batch: 8
+  patience: 15
+  lr0: 0.0001
+  workers: 4
+
+vit:
+  backbone: vit_small_patch16_224.augreg_in21k_ft_in1k   # or vit_base_patch16_224.augreg2_in21k_ft_in1k
+  img_size: 224
+  context_pad: 0.15                  # extra context around each box
+  neg_per_image: 2                   # hard-negative (background) crops mined per image
+  epochs: 25
+  batch: 64
+  lr: 0.0003
+  backbone_lr_mult: 0.1              # differential LR for transfer learning
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  drop_path: 0.1
+  warmup_epochs: 2
+  num_workers: 4
+  balanced_sampler: true
+
+hybrid:
+  yolo_conf: 0.05                    # low proposal threshold, ViT re-scores
+  iou: 0.6
+  alpha_grid: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+  max_proposals: 100
+
+ensemble:
+  wbf_iou: 0.55
+  weights: [2, 1]                    # YOLO, RT-DETR
+
+optuna:
+  yolo_trials: 20
+  yolo_epochs_per_trial: 15
+  yolo_data_fraction: 0.35
+  vit_trials: 20
+  vit_epochs_per_trial: 6
+  sampler: tpe                       # Bayesian optimisation (Tree-structured Parzen Estimator)
+  pruner: median
+  storage: sqlite:///runs/optuna.db
+
+evaluation:
+  iou_thr: 0.5                       # CRDDC'2022 protocol: IoU > 0.5 and matching label
+  bootstrap: 1000
+  size_buckets: {small: 0.005, medium: 0.05}   # fraction of image area
+
+tracking:
+  mlflow_uri: file:./mlruns
+  experiment: RoadVision
+
+app:
+  weights_dir: models
+  detector: models/yolo_best.pt
+  rtdetr: models/rtdetr_best.pt
+  vit: models/vit_best.pt
+  calibration: models/hybrid_calibration.json
+  hf_weights_repo: ""                # e.g. "your-hf-user/roadvision-weights" (downloaded at start-up if set)
+  max_upload_mb: 10
+  min_side: 64
+  max_side: 8000

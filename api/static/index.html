@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RoadVision</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--ink:#1d2430;--muted:#5d6878;--accent:#C73E1D;--line:#e3e6ea}
+  @media (prefers-color-scheme:dark){:root{--bg:#12161c;--card:#1b2129;--ink:#e8ecf1;--muted:#9aa5b4;--line:#2a323d}}
+  *{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+  main{max-width:1100px;margin:auto;padding:24px 16px}h1{margin:0 0 4px;font-size:26px}
+  p.sub{color:var(--muted);margin:0 0 20px}.grid{display:grid;grid-template-columns:340px 1fr;gap:16px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+  label{display:block;font-weight:600;margin:12px 0 4px}select,input{width:100%}
+  button{margin-top:16px;width:100%;padding:10px;border:0;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer}
+  img{max-width:100%;border-radius:8px}table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+  td,th{border-bottom:1px solid var(--line);padding:6px;text-align:left}.badge{font-size:20px;font-weight:700}
+  .err{color:var(--accent)} a{color:var(--accent)}
+</style>
+</head>
+<body><main>
+<h1>RoadVision</h1>
+<p class="sub">Real-time road damage detection · YOLO + Vision Transformer · <a href="/docs">API docs</a> · <a href="/ui">Gradio UI</a></p>
+<div class="grid">
+  <div class="card">
+    <label for="f">Road image (JPEG/PNG, ≤10 MB)</label><input id="f" type="file" accept="image/*">
+    <label for="m">Model</label>
+    <select id="m"><option value="hybrid">Hybrid YOLO + ViT (proposed)</option><option value="yolo">YOLO</option>
+      <option value="rtdetr">RT-DETR</option><option value="ensemble">WBF ensemble</option></select>
+    <label for="c">Confidence threshold (blank = calibrated)</label><input id="c" type="number" min="0.01" max="0.99" step="0.05" placeholder="calibrated">
+    <button id="go">Detect damage</button><p id="msg"></p>
+  </div>
+  <div class="card"><div id="sum"></div><img id="out" alt=""><table id="tab"></table></div>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+$('go').onclick=async()=>{
+  const f=$('f').files[0]; if(!f){$('msg').textContent='Choose an image first.';return}
+  const q=new URLSearchParams({mode:$('m').value}); if($('c').value) q.set('conf',$('c').value);
+  const fd=()=>{const d=new FormData();d.append('file',f);return d};
+  $('msg').textContent='Running…';$('msg').className='';
+  try{
+    const [j,img]=await Promise.all([fetch('/predict?'+q,{method:'POST',body:fd()}),fetch('/predict/annotated?'+q,{method:'POST',body:fd()})]);
+    if(!j.ok){const e=await j.json();throw new Error(e.detail?.[0]?.msg||e.detail)}
+    const r=await j.json(); $('out').src=URL.createObjectURL(await img.blob());
+    $('sum').innerHTML=`<div class="badge">${r.condition} · severity ${r.severity_index}/100</div><div>${r.num_detections} detections · ${r.latency_ms} ms · threshold ${r.threshold.toFixed(2)}</div>`;
+    $('tab').innerHTML='<tr><th>Class</th><th>Name</th><th>Score</th></tr>'+r.detections.map(d=>`<tr><td>${d.label}</td><td>${d.name}</td><td>${d.score.toFixed(3)}</td></tr>`).join('');
+    $('msg').textContent='';
+  }catch(e){$('msg').textContent='Error: '+e.message;$('msg').className='err'}
+};
+</script>
+</body></html>

@@ -1,0 +1,12 @@
+# Tiny CPU run on the synthetic dataset (scripts/make_synthetic_rdd.py) to verify the pipeline end-to-end.
+project: {device: cpu, workdir: runs_smoke}
+data:
+  raw_dir: data/synthetic/RDD2022
+  processed_dir: data/smoke_processed
+  crops_dir: data/smoke_crops
+  countries: [Japan, India]
+yolo: {weights: yolov8n.pt, imgsz: 320, epochs: 2, batch: 8, workers: 0, patience: 5}
+rtdetr: {imgsz: 320, epochs: 1, batch: 4, workers: 0}
+vit: {backbone: vit_tiny_patch16_224, epochs: 2, batch: 16, num_workers: 0, warmup_epochs: 0}
+optuna: {yolo_trials: 2, yolo_epochs_per_trial: 1, yolo_data_fraction: 1.0, vit_trials: 2, vit_epochs_per_trial: 1, storage: sqlite:///runs_smoke/optuna.db}
+evaluation: {bootstrap: 100}

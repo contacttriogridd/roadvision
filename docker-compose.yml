@@ -1,0 +1,10 @@
+services:
+  roadvision:
+    build: .
+    image: roadvision:latest
+    ports: ["7860:7860"]
+    environment:
+      - RV_WEIGHTS_REPO=${RV_WEIGHTS_REPO:-}
+    volumes:
+      - ./models:/home/user/app/models:ro
+    restart: unless-stopped

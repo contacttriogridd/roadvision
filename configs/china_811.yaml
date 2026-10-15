@@ -1,0 +1,9 @@
+# Benchmark protocol identical to StripRFNet (Lin et al., 2025):
+# Chinese subset of RDD2022 (China_Drone + China_MotorBike), 4 classes, random 8:1:1 split.
+# Run the full pipeline with this override to get numbers directly comparable to their Table.
+data:
+  countries: [China_MotorBike, China_Drone]
+  protocol: china_811
+  processed_dir: data/processed_china
+  crops_dir: data/crops_china
+project: {workdir: runs_china}

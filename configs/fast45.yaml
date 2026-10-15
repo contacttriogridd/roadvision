@@ -1,0 +1,7 @@
+project: {device: "0", workdir: runs}
+data: {countries: [China_MotorBike, China_Drone], protocol: china_811}
+yolo: {weights: yolov8s.pt, imgsz: 512, epochs: 15, batch: 32, patience: 50, close_mosaic: 3, workers: 4}
+rtdetr: {weights: rtdetr-l.pt, imgsz: 512, epochs: 6, batch: 8, patience: 50, workers: 4}
+vit: {backbone: vit_small_patch16_224.augreg_in21k_ft_in1k, epochs: 4, batch: 64, warmup_epochs: 0, num_workers: 4}
+optuna: {yolo_trials: 4, yolo_epochs_per_trial: 3, yolo_data_fraction: 0.25, vit_trials: 3, vit_epochs_per_trial: 1}
+evaluation: {bootstrap: 300}
