@@ -3,7 +3,7 @@ services:
   - type: web
     name: roadvision
     runtime: docker
-    plan: free            # 512 MB RAM; switch to "standard" (2 GB) if the instance runs out of memory
+    plan: free            # 512 MB RAM: RV_LITE drops the Gradio mount (/ui) so the API + web UI fit
     dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     autoDeploy: true
@@ -12,3 +12,9 @@ services:
         value: "7860"
       - key: RV_WEIGHTS_URL
         value: https://github.com/contacttriogridd/roadvision/releases/download/v1.0
+      - key: RV_LITE
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: MALLOC_ARENA_MAX
+        value: "2"

@@ -1,14 +1,14 @@
-# Streamlit Community Cloud runtime (CPU only)
+# Streamlit Community Cloud runtime (CPU-only torch)
 --extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.6.0+cpu
-torchvision==0.21.0+cpu
-ultralytics>=8.3.0
-timm>=1.0.0
-numpy>=1.26
-pandas>=2.1
-scikit-learn>=1.4
-opencv-python-headless>=4.9
-albumentations>=1.4
-Pillow>=10.0
-PyYAML>=6.0
-streamlit>=1.50
+torch
+torchvision
+ultralytics
+timm
+numpy
+pandas
+scikit-learn
+opencv-python-headless
+albumentations
+Pillow
+PyYAML
+streamlit

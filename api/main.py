@@ -175,7 +175,9 @@ def index():
     return FileResponse(ROOT / "api/static/index.html")
 
 
-try:  # Gradio UI for Hugging Face Spaces, served from the same container
+try:  # Gradio UI for Hugging Face Spaces, served from the same container (skipped on small instances)
+    if os.environ.get("RV_LITE") == "1":
+        raise ImportError("RV_LITE: Gradio UI disabled to save memory")
     import gradio as gr
 
     from app.gradio_ui import build_ui
