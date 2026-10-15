@@ -16,6 +16,7 @@ min/max side, enum-validated mode, bounded confidence (pydantic/Query constraint
 """
 from __future__ import annotations
 
+import json
 import os
 import sys
 from enum import Enum
@@ -157,6 +158,31 @@ async def predict_batch(files: list[UploadFile] = File(...), mode: Mode = Mode.h
     if not 1 <= len(files) <= 8:
         raise HTTPException(422, "Send between 1 and 8 images")
     return [{"filename": f.filename, **run(await read_image(f), mode, conf)} for f in files]
+
+
+@app.get("/metrics-summary")
+def metrics_summary():
+    """Held-out test metrics of the deployed models (written by the evaluate stage)."""
+    p = Path(CFG.app.weights_dir) / "eval_summary.json"
+    if not p.exists():
+        raise HTTPException(404, "No evaluation summary bundled with this deployment")
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+EXAMPLES = ROOT / "app/examples"
+
+
+@app.get("/examples", include_in_schema=False)
+def examples():
+    return sorted(p.name for p in EXAMPLES.glob("*.jpg"))
+
+
+@app.get("/examples/{name}", include_in_schema=False)
+def example(name: str):
+    p = (EXAMPLES / name).resolve()
+    if p.parent != EXAMPLES.resolve() or not p.is_file():
+        raise HTTPException(404, "Unknown example")
+    return FileResponse(p)
 
 
 @app.get("/", include_in_schema=False)
